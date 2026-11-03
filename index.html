@@ -1,19 +1,158 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Mi Ebook</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Visor de Ebook</title>
+
+<style>
+
+body{
+margin:0;
+padding:20px;
+font-family:Arial,sans-serif;
+background:#f5f5f5;
+}
+
+.viewer{
+max-width:1200px;
+margin:auto;
+}
+
+.toolbar{
+display:flex;
+justify-content:center;
+align-items:center;
+gap:10px;
+margin-bottom:20px;
+flex-wrap:wrap;
+}
+
+button{
+padding:10px 15px;
+background:#2563eb;
+color:white;
+border:none;
+border-radius:8px;
+cursor:pointer;
+}
+
+button:hover{
+background:#1d4ed8;
+}
+
+#pageInfo{
+font-weight:bold;
+}
+
+.image-wrapper{
+position:relative;
+text-align:center;
+}
+
+#mainImage{
+max-width:100%;
+height:auto;
+border-radius:12px;
+box-shadow:0 5px 20px rgba(0,0,0,.15);
+transition:.3s;
+}
+
+.watermark{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%) rotate(-25deg);
+font-size:48px;
+font-weight:bold;
+color:rgba(255,0,0,.10);
+pointer-events:none;
+white-space:nowrap;
+}
+
+.thumbnails{
+display:flex;
+justify-content:center;
+gap:10px;
+margin-top:20px;
+flex-wrap:wrap;
+}
+
+.thumb{
+width:100px;
+cursor:pointer;
+border:3px solid transparent;
+border-radius:8px;
+}
+
+.thumb.active{
+border-color:#2563eb;
+}
+
+</style>
+
 </head>
 
 <body>
 
-<h1>Mi visor funciona</h1>
+<div class="viewer">
 
-<img
-src="https://via.placeholder.com/800x1000"
-style="max-width:100%;">
+<div class="toolbar">
 
-</body>
+<button onclick="prevPage()">⬅ Anterior</button>
 
-</html>
+<span id="pageInfo"></span>
+
+<button onclick="nextPage()">Siguiente ➡</button>
+
+<button onclick="zoomOut()">➖</button>
+
+<button onclick="zoomIn()">➕</button>
+
+</div>
+
+<div class="image-wrapper">
+
+<img id="mainImage">
+
+<div class="watermark">
+USO EXCLUSIVO
+</div>
+
+</div>
+
+<div id="thumbContainer" class="thumbnails"></div>
+
+</div>
+
+<script>
+
+/* ================================================= */
+/* AQUÍ CAMBIARÁS LAS URLS PARA FUTUROS EBOOKS */
+/* ================================================= */
+
+const paginas = [
+
+"https://d1yei2z3i6k35z.cloudfront.net/18537462/6aea3b0e472483.20274727_Perakawaiiconhojaverde.png",
+
+"https://d1yei2z3i6k35z.cloudfront.net/18537462/6aea3b3c1ec3d6.12735978_Laperaunafrutamaravillosa.png",
+
+"https://d1yei2z3i6k35z.cloudfront.net/18537462/6aea3b5bb45e05.85166898_COmidapera.jpg"
+
+];
+
+/* ================================================= */
+/* NO CAMBIAR NADA DEBAJO DE ESTA LÍNEA */
+/* ================================================= */
+
+let paginaActual = 0;
+let zoom = 100;
+
+const imagen =
+document.getElementById("mainImage");
+
+function render(){
+
+imagen.src = paginas[paginaActual];
+
+document.getElementById
